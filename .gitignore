@@ -2,10 +2,17 @@
 *.webarchive
 *.zip
 *.mp4
+*.mov
 *.csv
-*.py
+*.doc*
+*.xls*
+*.ppt*
+*.gsheet
+*.gdoc
+icon?
 # JetBrains files
 .idea/
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files
