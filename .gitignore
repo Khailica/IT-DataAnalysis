@@ -1,5 +1,6 @@
 # My exceptions 
 *.webarchive
+*.png
 *.zip
 *.mp4
 *.mov
