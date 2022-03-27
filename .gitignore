@@ -13,7 +13,8 @@
 icon?
 # JetBrains files
 .idea/
-.DS_Store
+.DS_Store*
+Icon*
 
 
 # Byte-compiled / optimized / DLL files
