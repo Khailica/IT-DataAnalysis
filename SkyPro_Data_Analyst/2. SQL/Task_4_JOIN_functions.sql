@@ -5,14 +5,22 @@
 из-за небольшого количества проголосовавших.
 */
 
-select tb."originalTitle", r."averageRating"
-  from imdb.title_basics tb
-       join imdb.title_ratings r using(tconst)
- where tb."startYear" = 2020 and
-       r."numVotes" > 100000 and
-       tb."titleType" = 'movie'
- order by r."averageRating" desc 
- limit 10;
+SELECT
+	tb."originalTitle"
+,	r."averageRating"
+FROM
+	imdb.title_basics tb
+JOIN
+	imdb.title_ratings r
+		USING(tconst)
+WHERE
+	tb."startYear" = 2020 AND
+	r."numVotes" > 100000 AND
+	tb."titleType" = 'movie'
+ORDER BY
+	r."averageRating" DESC
+LIMIT 10;
+
 
 
 /* Задание 2
@@ -21,17 +29,30 @@ select tb."originalTitle", r."averageRating"
 Условия задачи 1 (например, количество оценок) тоже учитываются!
 */
 
-select nb."primaryName", avg(r."averageRating")
-from imdb.title_basics b
- join imdb.title_ratings r on r.tconst = b.tconst and
-     r."numVotes" > 100000
- join imdb.title_crew_long cl on cl.tconst = r.tconst
- left join imdb.name_basics nb on nb.nconst = cl.directors  -- взял left join, т.к. не уверен в таблице name_basics, вдруг там нет точного соответствия
-where b."startYear" = 2020 and
-    b."titleType" in ('movie', 'tvSeries')
-group by nb."primaryName"
-order by avg(r."averageRating") desc
-limit 10;
+SELECT
+	nb."primaryName"
+,	avg(r."averageRating")
+FROM
+	imdb.title_basics b
+JOIN
+	imdb.title_ratings r
+		ON r.tconst = b.tconst AND
+		r."numVotes" > 100000
+JOIN
+	imdb.title_crew_long cl
+		ON cl.tconst = r.tconst
+LEFT JOIN
+	imdb.name_basics nb
+		ON nb.nconst = cl.directors
+WHERE
+	b."startYear" = 2020 AND
+	b."titleType" IN ('movie', 'tvSeries')
+GROUP BY
+	nb."primaryName"
+ORDER BY
+	avg(r."averageRating") DESC
+LIMIT 10;
+
 
 
 /* Задание 3
@@ -39,11 +60,17 @@ limit 10;
 начиная с 2015 года по 2020 год включительно. Сделайте разбивку данных по годам.
 */
 
-select b."startYear", count(b.tconst)
-from imdb.title_basics b
-where b."titleType" = 'movie' and 
-    b."startYear" between 2015 and 2020
-group by b."startYear";
+SELECT
+	b."startYear"
+,	count(b.tconst)
+FROM
+	imdb.title_basics b
+WHERE
+	b."titleType" = 'movie' AND
+	b."startYear" BETWEEN 2015 AND 2020
+GROUP BY
+	b."startYear";
+
 
 
 /* Задание 4
@@ -55,9 +82,23 @@ group by b."startYear";
 Будет круто, если проверим.
 */
 
-select  (select (count(d2.directors) / count(d1.directors)::numeric * 100)
-          from imdb.directors_2018 d1
-               left join imdb.directors_2019 d2 on d2.directors = d1.directors) as "2019/2018",
-        (select (count(d3.directors) / count(d2.directors)::numeric * 100)
-           from imdb.directors_2019 d2
-                left join imdb.directors_2020 d3 on d3.directors = d2.directors) as "2020/2019";
+
+SELECT
+     (
+     SELECT
+          count(d2.directors) / count(d1.directors)::numeric * 100
+     FROM
+          imdb.directors_2018 d1
+     LEFT JOIN
+          imdb.directors_2019 d2
+               ON d2.directors = d1.directors
+     ) "2019/2018"
+,    (
+     SELECT
+          count(d3.directors) / count(d2.directors)::numeric * 100
+     FROM
+          imdb.directors_2019 d2
+     LEFT JOIN
+          imdb.directors_2020 d3
+               ON d3.directors = d2.directors
+     ) "2020/2019";

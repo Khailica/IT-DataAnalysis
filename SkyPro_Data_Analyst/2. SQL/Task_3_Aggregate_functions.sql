@@ -6,19 +6,26 @@
 Результаты в отчете нужно отсортировать по общему объему всех продаж в мире на каждой платформе
 */
 
- select sum(global_sales) as total_sales,
-       platform_name as games,
-       count(distinct publisher) as publishers,
-       avg(global_sales) as global_sales_per_game,
-       sum(global_sales) / count(distinct publisher) as sales_per_publisher
-  from game_db
- where genre ~* 'shooter' and
-       sales_start >= '2010-01-01' and
-       publisher is not null
- group by platform_name
-having count(distinct name) > 10 and
-       sum(global_sales) > 50
- order by sum(global_sales) desc, platform_name;
+SELECT
+	sum(global_sales) AS total_sales
+,	platform_name games
+,	count(DISTINCT publisher) AS publishers
+,	avg(global_sales) AS global_sales_per_game
+,	sum(global_sales) / count(DISTINCT publisher) AS sales_per_publisher
+FROM
+	game_db
+WHERE
+	genre ~* 'shooter' AND
+	sales_start >= '2010-01-01' AND
+	publisher IS NOT NULL
+GROUP BY
+	platform_name
+HAVING
+	count(DISTINCT name) > 10 AND
+	sum(global_sales) > 50
+ORDER BY
+	sum(global_sales) DESC
+,	platform_name;
 
 
 /*Задание 2
@@ -29,12 +36,13 @@ having count(distinct name) > 10 and
 а дальше — доли каждого жанра в общем количестве игр, тоже отдельными столбцами.
 */
 
- SELECT
-    count('выводим количество жанров 1') FILTER (WHERE genre = 'Action' OR genre = 'Shooter') as "Action+Shooter",
-    count('выводим количество жанров 2') FILTER (WHERE genre = 'Rore-Playing' OR genre = 'Adventure') as "Rore-Playing+Adventure",
-    count('выводим количество жанров 3') FILTER (WHERE genre not in ('Rore-Playing', 'Adventure', 'Action', 'Shooter')) as "Other",
-    count('выводим долю 1 от Total_games') FILTER (WHERE genre = 'Action' OR genre = 'Shooter') / count(name)::numeric as "part1",
-    count('выводим долю 2 от Total_games') FILTER (WHERE genre = 'Rore-Playing' OR genre = 'Adventure') / count(name)::numeric as "part2",
-    count('выводим долю 3 от Total_games') FILTER (WHERE genre not in ('Rore-Playing', 'Adventure', 'Action', 'Shooter')) / count(name)::numeric as "part3",
-    count(name) as "Total_games"
-FROM game_db g;
+SELECT
+	count('выводим количество жанров 1') FILTER(WHERE genre = 'Action' OR genre = 'Shooter') AS "Action+Shooter"
+,	count('выводим количество жанров 2') FILTER(WHERE genre = 'Rore-Playing' OR genre = 'Adventure') AS "Rore-Playing+Adventure"
+,	count('выводим количество жанров 3') FILTER(WHERE genre NOT IN ('Rore-Playing', 'Adventure', 'Action', 'Shooter')) AS "Other"
+,	count('выводим долю 1 от Total_games') FILTER(WHERE genre = 'Action' OR genre = 'Shooter') / count(name)::numeric AS part1
+,	count('выводим долю 2 от Total_games') FILTER(WHERE genre = 'Rore-Playing' OR genre = 'Adventure') / count(name)::numeric AS part2
+,	count('выводим долю 3 от Total_games') FILTER(WHERE genre NOT IN ('Rore-Playing', 'Adventure', 'Action', 'Shooter')) / count(name)::numeric AS part3
+,	count(name) AS "Total_games"
+FROM
+	game_db g;

@@ -9,15 +9,30 @@
 Результат отсортируйте по полю game_rank (по возрастанию).
 */
 
-SELECT game_rank, name, genre, publisher, eu_sales, platform_name, sales_start,
-       CASE WHEN (publisher ILIKE '%sony%' OR platform_name ~* 'playstation')
-                 AND genre = 'Sports'
-                 AND extract(year from sales_start) < (date_part('year', current_date) - 9)
-                 AND eu_sales < 0.2 THEN eu_sales * 0.4
-            ELSE eu_sales 
-       END AS discount_rate
-  FROM game_db
- ORDER BY game_rank;
+SELECT
+	game_rank
+,	name
+,	genre
+,	publisher
+,	eu_sales
+,	platform_name
+,	sales_start
+,	CASE
+		WHEN (
+				publisher ILIKE '%sony%' OR
+				platform_name ~* 'playstation'
+			) AND
+			genre = 'Sports' AND
+			date_part('year', sales_start) < date_part('year', current_date) - 9 AND
+			eu_sales < 0.2 THEN
+			eu_sales * 0.4
+		ELSE
+			eu_sales
+	END discount_rate
+FROM
+	game_db
+ORDER BY
+	game_rank;
 
 
 
@@ -42,10 +57,16 @@ SELECT game_rank, name, genre, publisher, eu_sales, platform_name, sales_start,
 10. убрал ограничение на кол-во возвращаемых строк LIMIT
 11. написал комментарии ))
 */
-SELECT 
-       CASE WHEN name ILIKE '%fifa%' OR name ~~* 'soccer' OR LOWER(name) LIKE '%football%'
-            THEN 1
-            ELSE 0 
-       END AS is_soccer,
-       *
-  FROM game_db;
+ 
+ SELECT
+ 	CASE
+ 		WHEN name ILIKE '%fifa%' OR
+ 			name ~~* 'soccer' OR
+ 			lower(name) LIKE '%football%' THEN
+ 			1
+ 		ELSE
+ 			0
+ 	END is_soccer
+ ,	*
+ FROM
+ 	game_db;

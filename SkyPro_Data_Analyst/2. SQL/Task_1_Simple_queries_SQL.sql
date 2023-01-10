@@ -6,11 +6,14 @@
 Важно: имена режиссеров нужно писать на английском, ведь это база Netflix. В нашей базе режиссер «Паразитов» записан как Bong Joon Ho, что незначительно отличается от версии IMDb.
 */
 
-select  *
-  from  netflix
- where  type = 'Movie'
-        and director in ('Bong Joon Ho', 'Sam Mendes', 'Todd Phillips', 'Quentin Tarantino', 'Martin Scorsese')
-        and release_year >= 2010;
+SELECT
+	*
+FROM
+	netflix
+WHERE
+	type = 'Movie' AND
+	director IN ('Bong Joon Ho', 'Sam Mendes', 'Todd Phillips', 'Quentin Tarantino', 'Martin Scorsese') AND
+	release_year >= 2010;
 
 
 
@@ -21,10 +24,15 @@ select  *
 Имена актеров и названия фильмов можно посмотреть по этой ссылке. В БД нужно проверить только наличие нужного сочетания.
 */
 
-select  *
-  from  netflix
- where  type = 'Movie'
-        and (cast_names like '%Joaquin Phoenix%'
-            or cast_names like '%Renée Zellweger%'
-            or cast_names like '%Brad Pitt%'
-            or cast_names like '%Laura Dern%');
+SELECT
+	*
+FROM
+	netflix
+WHERE
+	type = 'Movie' AND
+	(
+		cast_names LIKE '%Joaquin Phoenix%' OR
+		cast_names LIKE '%Renée Zellweger%' OR
+		cast_names LIKE '%Brad Pitt%' OR
+		cast_names LIKE '%Laura Dern%'
+	);
